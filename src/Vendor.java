@@ -82,16 +82,33 @@ class Vendor {
     }
 
     /**
-     * Restocks the specified item by the specified amount.
+     * Restocks the specified item by the specified amount, if the item
+     * does not exist then it will create it as a new item in the stock.
+     * Items will not be restocked if the quantity is not greater than 0 or if the
+     * price is less than 0.
      * @param item The item to restock.
      * @param quantity The amount to restock the item by.
      */
-    void restock(String item, int quantity){
-        if(Stock.containsKey(item) && quantity > 0) {
+    void restock(String item, int quantity, double price){
+        if(Stock.containsKey(item) && quantity > 0 && price >= 0) {
             Stock.get(item).restock(quantity);
+        } else if( !Stock.containsKey(item) && quantity > 0 && price > 0) {
+            Stock.put(item, new Item(price, quantity));
         }
     }
 
+    /**
+     * Returns the price of the inputted item, if it exists.
+     * @param item The item to get the price for.
+     * @return double indicating the price of the item, 0.0 if the item does not exist.
+     */
+    double getPrice(String item){
+        if(Stock.containsKey(item)) {
+            return Stock.get(item).getPrice();
+        }else{
+            return 0.0;
+        }
+    }
 }
 
 class Examples {

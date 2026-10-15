@@ -81,7 +81,7 @@ public class VendorTest {
 
     @Test
     void restock(){
-        vendor.restock("Gum",10);
+        vendor.restock("Gum",10,0);
         assertEquals(16, vendor.getStock("Gum"));
     }
 
@@ -93,26 +93,63 @@ public class VendorTest {
             vendor.select("Gum");
         }
         assertEquals(0,vendor.getStock("Gum"));
-        vendor.restock("Gum",10);
+        vendor.restock("Gum",10,1);
         assertEquals(10,vendor.getStock("Gum"));
     }
 
     @Test
     void restockIndependent(){
-        vendor.restock("Gum",10);
+        vendor.restock("Gum",10,1);
         assertEquals(6, vendor.getStock("Candy"));
     }
 
     @Test
     void restockNeg(){
-        vendor.restock("Gum",-10);
+        vendor.restock("Gum",-10,1);
         assertEquals(6, vendor.getStock("Gum"));
     }
 
     @Test
-    void restockNonExistent(){
-        vendor.restock("Gummy",10);
-        assertEquals(0,vendor.getStock("Gummy"));
+    void restockNewItem(){
+        vendor.restock("Oats",10,1);
+        assertTrue(vendor.hasItem("Oats"));
+        assertEquals(10, vendor.getStock("Oats"));
+    }
+
+    @Test
+    void buyNewRestocked(){
+        vendor.restock("Gummy", 10,1);
+        assertTrue(vendor.hasItem("Gummy"));
+        vendor.addMoney(10.5);
+        assertEquals(10, vendor.getStock("Gummy"));
+        vendor.select("Gummy");
+        assertEquals(9, vendor.getStock("Gummy"));
+        assertEquals(9.5, vendor.getBalance());
+    }
+
+    @Test
+    void restockNewItemNegPrice(){
+        vendor.restock("Gummy",10,-1);
         assertFalse(vendor.hasItem("Gummy"));
+    }
+
+    @Test
+    void restockNegPrice(){
+        vendor.restock("Gum",10,-1);
+        assertTrue(vendor.hasItem("Gum"));
+        assertEquals(6,vendor.getStock("Gum"));
+    }
+
+    @Test
+    void restockKeepsExistingPrice(){
+        vendor.restock("Candy",5,20);
+        assertTrue(vendor.hasItem("Candy"));
+        assertEquals(1.25,vendor.getPrice("Candy"));
+    }
+
+    @Test
+    void restockNewItemNegQuantity(){
+        vendor.restock("Mushroom",-5,2);
+        assertFalse(vendor.hasItem("Mushroom"));
     }
 }
