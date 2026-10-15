@@ -17,7 +17,9 @@ class Item {
      * @param amount The amount to increase the item's stock by.
      */
     void restock(int amount) {
-        this.stock = this.stock + amount;
+        if(amount > 0) {
+            this.stock = this.stock + amount;
+        }
     }
 
     /**

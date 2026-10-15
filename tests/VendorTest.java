@@ -79,4 +79,40 @@ public class VendorTest {
         assertEquals(10.5, vendor.getBalance());
     }
 
+    @Test
+    void restock(){
+        vendor.restock("Gum",10);
+        assertEquals(16, vendor.getStock("Gum"));
+    }
+
+    @Test
+    void restockEmpty(){
+        vendor.addMoney(10);
+        int stock = vendor.getStock("Gum");
+        for (int i =0; i< stock; i++){
+            vendor.select("Gum");
+        }
+        assertEquals(0,vendor.getStock("Gum"));
+        vendor.restock("Gum",10);
+        assertEquals(10,vendor.getStock("Gum"));
+    }
+
+    @Test
+    void restockIndependent(){
+        vendor.restock("Gum",10);
+        assertEquals(6, vendor.getStock("Candy"));
+    }
+
+    @Test
+    void restockNeg(){
+        vendor.restock("Gum",-10);
+        assertEquals(6, vendor.getStock("Gum"));
+    }
+
+    @Test
+    void restockNonExistent(){
+        vendor.restock("Gummy",10);
+        assertEquals(0,vendor.getStock("Gummy"));
+        assertFalse(vendor.hasItem("Gummy"));
+    }
 }

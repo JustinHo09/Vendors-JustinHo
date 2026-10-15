@@ -81,6 +81,17 @@ class Vendor {
         return Stock.containsKey(item);
     }
 
+    /**
+     * Restocks the specified item by the specified amount.
+     * @param item The item to restock.
+     * @param quantity The amount to restock the item by.
+     */
+    void restock(String item, int quantity){
+        if(Stock.containsKey(item) && quantity > 0) {
+            Stock.get(item).restock(quantity);
+        }
+    }
+
 }
 
 class Examples {
