@@ -52,6 +52,10 @@ class Vendor {
         else System.out.println("Sorry, don't know that item");
     }
 
+    int getStock (String item){
+        return Stock.get(item).getStock();
+    }
+
 }
 
 class Examples {
