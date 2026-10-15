@@ -3,13 +3,18 @@ import java.util.ArrayList;
 public class VendorSystem {
 
     private ArrayList<Vendor> vendors;
+    private final int cap = 5;
 
     public VendorSystem(){
         vendors = new ArrayList<>();
     }
 
-    public void addVendor(Vendor vendor){
-        vendors.add(vendor);
+    public boolean addVendor(Vendor vendor){
+        if(vendors.size() < 5) {
+            vendors.add(vendor);
+            return true;
+        }
+        return false;
     }
 
     public boolean removeVendor(int index){

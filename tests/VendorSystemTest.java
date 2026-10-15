@@ -88,6 +88,13 @@ class VendorSystemTest {
     }
 
     @Test
+    void addOverCap(){
+        assertEquals(5, vs.numberOfVendors());
+        assertFalse(vs.addVendor(new Vendor(1,1)));
+        assertEquals(5, vs.numberOfVendors());
+    }
+
+    @Test
     void emptyInventoryOfVendorInSystemOverlap(){
         assertTrue(vs.emptyVendor(4));
         assertFalse(vs.getVendor(4).hasItem("Gum"));
@@ -138,9 +145,11 @@ class VendorSystemTest {
 
     @Test
     void addVendor(){
-        vs.addVendor(new Vendor(5,5));
-        assertEquals(6, vs.numberOfVendors());
-        assertTrue(vs.vendorExists(5));
+        vs.removeVendor(0);
+        vs.removeVendor(0);
+        assertTrue(vs.addVendor(new Vendor(5,5)));
+        assertEquals(4, vs.numberOfVendors());
+        assertTrue(vs.vendorExists(3));
     }
 
     @Test

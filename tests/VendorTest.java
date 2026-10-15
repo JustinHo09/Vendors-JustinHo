@@ -309,5 +309,5 @@ public class VendorTest {
     void getPurchaseCountEmpty(){
         assertEquals(0, vendor.getItemPurchaseCount(""));
     }
-    
+
 }
