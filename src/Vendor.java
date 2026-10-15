@@ -148,6 +148,26 @@ class Vendor {
         }
         return inventoryString.toString();
     }
+
+    /**
+     * Retrieves the amount of times a certain item as been bought.
+     * @param item The name of the item to check.
+     * @return int showing how many times the item has been purchased.
+     */
+    int getItemPurchaseCount(String item){
+        if(item != null && !item.isBlank() && Stock.containsKey(item)) {
+            return Stock.get(item).getPurchaseCount();
+        }
+        return 0;
+    }
+
+    /**
+     * Gets all the items in the Stock and returns is
+     * @return ArrayList of String of the item names.
+     */
+    ArrayList<String> getItems(){
+        return new ArrayList<>(Stock.keySet());
+    }
 }
 
 class Examples {

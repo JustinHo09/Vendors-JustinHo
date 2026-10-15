@@ -123,4 +123,45 @@ public class VendorSystem {
         }
         return 0;
     }
+
+    public int getItemPurchaseCount(String itemName){
+        if(itemName == null || itemName.isBlank()){
+            return 0;
+        }
+        int sum=0;
+        for(int i=0; i<vendors.size(); i++){
+            if(vendors.get(i).hasItem(itemName)){
+                sum+=vendors.get(i).getItemPurchaseCount(itemName);
+            }
+        }
+        return sum;
+    }
+
+    public String getPurchaseInsights(){
+        ArrayList<String> allItems = new ArrayList<>();
+        for(int i=0; i<vendors.size(); i++){
+            int size = vendors.get(i).getItems().size();
+            for(int j=0; j<size; j++){
+                if(!allItems.contains(vendors.get(i).getItems().get(j))){
+                    allItems.add(vendors.get(i).getItems().get(j));
+                }
+            }
+        }
+        if(!allItems.isEmpty()) {
+            String purchaseInsights = "";
+            int max = -1;
+            int maxIndex = 0;
+            for (int i = 0; i < allItems.size(); i++) {
+                purchaseInsights += allItems.get(i) + ": " + getItemPurchaseCount(allItems.get(i)) + "\n";
+                if (getItemPurchaseCount(allItems.get(i)) >= max) {
+                    max = getItemPurchaseCount(allItems.get(i));
+                    maxIndex = i;
+                }
+            }
+            return purchaseInsights + "Most Popular Item is: " + allItems.get(maxIndex) + "\n";
+        }
+        return null;
+    }
+
+
 }

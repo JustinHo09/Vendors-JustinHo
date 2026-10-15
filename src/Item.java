@@ -1,6 +1,7 @@
 class Item {
     double price;
     int stock;
+    int purchaseCount;
 
     /**
      * Class for an item, representing an item for a vendor
@@ -10,6 +11,7 @@ class Item {
     Item(double price, int numPieces) {
         this.price = price;
         this.stock = numPieces;
+        this.purchaseCount = 0;
     }
 
     /**
@@ -28,6 +30,7 @@ class Item {
      */
     void purchase(int amount) {
         this.stock = this.stock - amount;
+        purchaseCount++;
     }
 
     /**
@@ -44,5 +47,13 @@ class Item {
      */
     double getPrice(){
         return this.price;
+    }
+
+    /**
+     * Retrieves the count for how many times this item has been purchased.
+     * @return An integer representing how many times this item has been purchased.
+     */
+    int getPurchaseCount(){
+        return this.purchaseCount;
     }
 }

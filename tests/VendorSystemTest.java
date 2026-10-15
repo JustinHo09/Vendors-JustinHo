@@ -297,4 +297,74 @@ class VendorSystemTest {
         assertFalse(vs.vendorHasItem(110,"Gumball Machine"));
     }
 
+    @Test
+    void itemPurchaseCount(){
+        vs.getVendor(0).addMoney(20);
+        vs.buyItemFromVendor(0, "Gum");
+        vs.buyItemFromVendor(0, "Gum");
+        vs.buyItemFromVendor(0, "Gum");
+
+        vs.getVendor(3).addMoney(20);
+        vs.buyItemFromVendor(3, "Gum");
+        vs.buyItemFromVendor(3, "Candy");
+
+        vs.getVendor(4).addMoney(20);
+        vs.buyItemFromVendor(4, "Candy");
+        assertEquals(4, vs.getItemPurchaseCount("Gum"));
+        assertEquals(2, vs.getItemPurchaseCount("Candy"));
+        assertEquals(0, vs.getItemPurchaseCount("Coke"));
+        assertEquals(0, vs.getItemPurchaseCount("Gummy"));
+    }
+
+    @Test
+    void itemPurchaseCountNull(){
+        assertEquals(0, vs.getItemPurchaseCount(null));
+    }
+
+    @Test
+    void itemPurchaseCountBlank(){
+        assertEquals(0, vs.getItemPurchaseCount(""));
+    }
+
+    @Test
+    void itemPurchaseCountNotValidItem(){
+        assertEquals(0, vs.getItemPurchaseCount("Gumball Machine"));
+    }
+
+    @Test
+    void purchaseInsights(){
+        vs.getVendor(0).addMoney(20);
+        vs.getVendor(3).addMoney(20);
+        vs.getVendor(1).addMoney(20);
+        vs.getVendor(2).addMoney(20);
+
+        vs.buyItemFromVendor(0, "Gum");
+        vs.buyItemFromVendor(3, "Candy");
+        vs.buyItemFromVendor(3, "Gum");
+        vs.buyItemFromVendor(1, "Candy");
+        vs.buyItemFromVendor(2, "Gum");
+        vs.buyItemFromVendor(2, "Candy");
+        vs.buyItemFromVendor(3, "Gum");
+        vs.buyItemFromVendor(1, "Candy");
+        vs.buyItemFromVendor(4, "Gum");
+        vs.buyItemFromVendor(4, "Gum");
+        vs.buyItemFromVendor(4, "Coke");
+
+        String output = vs.getPurchaseInsights();
+        assertTrue(output.contains("Most Popular Item is: Gum"));
+        assertTrue(output.contains("Gum: 6"));
+        assertTrue(output.contains("Gummy: 0"));
+        assertTrue(output.contains("Coke: 1"));
+        assertTrue(output.contains("Candy: 4"));
+
+    }
+
+    @Test
+    void purchaseInsightsNull(){
+        for(int i=0; i<vs.numberOfVendors(); i++){
+            vs.getVendor(i).emptyVendor();
+        }
+        assertNull(vs.getPurchaseInsights());
+    }
+
 }

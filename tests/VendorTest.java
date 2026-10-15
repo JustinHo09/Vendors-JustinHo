@@ -272,4 +272,42 @@ public class VendorTest {
         assertEquals(10, vendor.getStock("Gum"));
         assertEquals(0.6,  vendor.getPrice("Gum"));
     }
+
+    @Test
+    void getPurchaseCount(){
+        assertEquals(0, vendor.getItemPurchaseCount("Gum"));
+        vendor.addMoney(10.5);
+        vendor.select("Gum");
+        vendor.select("Gum");
+        assertEquals(2, vendor.getItemPurchaseCount("Gum"));
+    }
+
+    @Test
+    void getPurchaseCountNull(){
+        assertEquals(0, vendor.getItemPurchaseCount(null));
+    }
+
+    @Test
+    void getItems(){
+        assertTrue(vendor.getItems().contains("Gum"));
+        assertTrue(vendor.getItems().contains("Candy"));
+        assertFalse(vendor.getItems().contains("Gummy"));
+    }
+
+    @Test
+    void getItemsEmpty(){
+        vendor.emptyVendor();
+        assertTrue(vendor.getItems().isEmpty());
+    }
+
+    @Test
+    void getPurchaseCountNotExist(){
+        assertEquals(0, vendor.getItemPurchaseCount("Gumball Machine"));
+    }
+
+    @Test
+    void getPurchaseCountEmpty(){
+        assertEquals(0, vendor.getItemPurchaseCount(""));
+    }
+    
 }
