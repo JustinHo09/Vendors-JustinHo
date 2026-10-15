@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -131,6 +132,21 @@ class Vendor {
      */
     void removeItem(String item){
         Stock.remove(item);
+    }
+
+    /**
+     * Gets each item in the vendor's inventory and make it into a String detailing its name and stock.
+     * @return ArrayList of Strings with each index housing a String with an item name and stock
+     * from the vendor's inventory
+     */
+    String getInventory(){
+        ArrayList<String> inventory = new ArrayList<>(Stock.keySet());
+        ArrayList<String> inventoryString = new ArrayList<>();
+        for (int i=0; i<Stock.size(); i++){
+            String item = inventory.get(i) + ": " + Stock.get(inventory.get(i)).getStock();
+            inventoryString.add(item);
+        }
+        return inventoryString.toString();
     }
 }
 
