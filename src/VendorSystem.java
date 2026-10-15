@@ -68,9 +68,10 @@ public class VendorSystem {
         return false;
     }
 
-    public boolean restockItemFromVendor(int index, String itemName, int quantity, double price, String description){
+    public boolean restockItemFromVendor(int index, String itemName, int quantity, double price,
+                                         String description, String category){
         if(index >= 0 && index < vendors.size()) {
-            vendors.get(index).restock(itemName, quantity, price, description);
+            vendors.get(index).restock(itemName, quantity, price, description, category);
             return true;
         }
         return false;
@@ -91,6 +92,34 @@ public class VendorSystem {
         }
         return false;
 
+    }
+
+    public boolean setItemDiscount(int vendorIndex, double discount, String itemName){
+        if(vendorIndex >= 0 && vendorIndex < vendors.size()) {
+            return vendors.get(vendorIndex).setDiscountItem(discount, itemName);
+        }
+        return false;
+    }
+
+    public boolean setCategoryDiscount(int vendorIndex, double discount,String category){
+        if(vendorIndex >= 0 && vendorIndex < vendors.size()) {
+            return vendors.get(vendorIndex).setDiscountCategory(discount, category);
+        }
+        return false;
+    }
+
+    public double getItemCost(int vendorIndex, String itemName){
+        if(vendorIndex >= 0 && vendorIndex < vendors.size()) {
+            return vendors.get(vendorIndex).getPrice(itemName);
+        }
+        return 0.0;
+    }
+
+    public String getItemCategory(int vendorIndex, String itemName){
+        if(vendorIndex >= 0 && vendorIndex < vendors.size()) {
+            return vendors.get(vendorIndex).getCategory(itemName);
+        }
+        return null;
     }
 
     public boolean addMoneyToVendor(int index, double amount){

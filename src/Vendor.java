@@ -10,9 +10,10 @@ class Vendor {
     private HashMap<String, Item> Stock = new HashMap<String,Item>();
     private double balance;
 
-    Vendor(int numCandy, int numGum, String gumDescription, String candyDescription) {
-        Stock.put("Candy", new Item(1.25, numCandy, candyDescription));
-        Stock.put("Gum", new Item(.5, numGum, gumDescription));
+    Vendor(int numCandy, int numGum, String gumDescription, String candyDescription,
+           String gumCategory, String candyCategory) {
+        Stock.put("Candy", new Item(1.25, numCandy, candyDescription, "Sweets"));
+        Stock.put("Gum", new Item(.5, numGum, gumDescription, "Sweets"));
         this.balance = 0;
     }
 
@@ -90,11 +91,11 @@ class Vendor {
      * @param item The item to restock.
      * @param quantity The amount to restock the item by.
      */
-    void restock(String item, int quantity, double price, String description){
+    void restock(String item, int quantity, double price, String description, String category){
         if(Stock.containsKey(item) && quantity > 0 && price >= 0) {
             Stock.get(item).restock(quantity);
         } else if( !Stock.containsKey(item) && quantity > 0 && price > 0) {
-            Stock.put(item, new Item(price, quantity, description));
+            Stock.put(item, new Item(price, quantity, description, category));
         }
     }
 
@@ -177,6 +178,83 @@ class Vendor {
     String getItemDescription(String item){
         if(item != null && !item.isBlank() && Stock.containsKey(item)) {
             return Stock.get(item).getDescription();
+        }
+        return null;
+    }
+
+    /**
+     * This will return the category of the inputted item if it exists.
+     * @param item The item to check the category of
+     * @return The category of the item, null if it is not a valid item
+     */
+    String getItemCategory(String item){
+        if(item != null && !item.isBlank() && Stock.containsKey(item)) {
+            return Stock.get(item).getCategory();
+        }
+        return null;
+    }
+
+    /**
+     * Gets all the items of a specific category
+     * @param category The category to get the items in it.
+     * @return ArrayList of the items in that category.
+     */
+    ArrayList<Item> getItemsInCategory(String category){
+        ArrayList<Item> itemsInCategory = new ArrayList<>();
+        ArrayList<Item> items = new ArrayList<Item>();
+        for(String item : Stock.keySet()){
+            items.add(Stock.get(item));
+        }
+        if(category != null && !category.isBlank()) {
+            for(int i=0; i<items.size(); i++){
+                if(items.get(i).getCategory().contains(category)){
+                    itemsInCategory.add(items.get(i));
+                }
+            }
+        }
+        return itemsInCategory;
+    }
+
+    /**
+     * This discount's a specific item a vendor has
+     * @param discount The discount amount to apply.
+     * @param itemName The item to apply the discount too.
+     */
+    boolean setDiscountItem(double discount, String itemName){
+        if(itemName != null && !itemName.isBlank() && Stock.containsKey(itemName)
+        && discount > 0 && discount < 1){
+            Stock.get(itemName).setDiscount(discount);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This applies a discount across an entire category
+     * @param discount The discount amount to apply.
+     * @param category The category to apply it to.
+     */
+    boolean setDiscountCategory(double discount, String category){
+        if(category != null && !category.isBlank()){
+            int size = getItemsInCategory(category).size();
+            if(size > 0) {
+                for(int i=0; i<size; i++) {
+                    getItemsInCategory(category).get(i).setDiscount(discount);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns the category of the inputted item
+     * @param item The item to get the category of
+     * @return The category of the item
+     */
+    String getCategory(String item){
+        if(item != null && !item.isBlank() && Stock.containsKey(item)){
+            return Stock.get(item).getCategory();
         }
         return null;
     }

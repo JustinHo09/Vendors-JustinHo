@@ -14,7 +14,7 @@ public class VendorTest {
     @BeforeEach
     public void setup() {
         vendor = new Vendor(6,6, "Its oh so chewy and pink!"
-                , "This is super sweet and round!");
+                , "This is super sweet and round!", "Sweets", "Sweets");
     }
 
     @Test
@@ -84,8 +84,9 @@ public class VendorTest {
 
     @Test
     void restock(){
-        vendor.restock("Gum",10,0, "Its pink");
+        vendor.restock("Gum",10,0, "Its pink", "Sweets");
         assertEquals(16, vendor.getStock("Gum"));
+        assertEquals("Sweets", vendor.getCategory("Gum"));
     }
 
     @Test
@@ -96,33 +97,35 @@ public class VendorTest {
             vendor.select("Gum");
         }
         assertEquals(0,vendor.getStock("Gum"));
-        vendor.restock("Gum",10,1, "Its pink");
+        vendor.restock("Gum",10,1, "Its pink", "Sweets");
         assertEquals(10,vendor.getStock("Gum"));
+        assertEquals("Sweets", vendor.getCategory("Gum"));
     }
 
     @Test
     void restockIndependent(){
-        vendor.restock("Gum",10,1, "Its pink");
+        vendor.restock("Gum",10,1, "Its pink", "Sweets");
         assertEquals(6, vendor.getStock("Candy"));
     }
 
     @Test
     void restockNeg(){
-        vendor.restock("Gum",-10,1, "Its pink");
+        vendor.restock("Gum",-10,1, "Its pink", "Sweets");
         assertEquals(6, vendor.getStock("Gum"));
     }
 
     @Test
     void restockNewItem(){
-        vendor.restock("Oats",10,1, "It has Washington's Face");
+        vendor.restock("Oats",10,1, "It has Washington's Face", "Healthy");
         assertTrue(vendor.hasItem("Oats"));
         assertEquals(10, vendor.getStock("Oats"));
         assertEquals("It has Washington's Face", vendor.getItemDescription("Oats"));
+        assertEquals("Healthy", vendor.getCategory("Oats"));
     }
 
     @Test
     void buyNewRestocked(){
-        vendor.restock("Gummy", 10,1, "Its pink");
+        vendor.restock("Gummy", 10,1, "Its pink", "Sweets");
         assertTrue(vendor.hasItem("Gummy"));
         vendor.addMoney(10.5);
         assertEquals(10, vendor.getStock("Gummy"));
@@ -133,27 +136,27 @@ public class VendorTest {
 
     @Test
     void restockNewItemNegPrice(){
-        vendor.restock("Gummy",10,-1, "Its sour");
+        vendor.restock("Gummy",10,-1, "Its sour", "Sweets");
         assertFalse(vendor.hasItem("Gummy"));
     }
 
     @Test
     void restockNegPrice(){
-        vendor.restock("Gum",10,-1, "Its pink");
+        vendor.restock("Gum",10,-1, "Its pink", "Sweets");
         assertTrue(vendor.hasItem("Gum"));
         assertEquals(6,vendor.getStock("Gum"));
     }
 
     @Test
     void restockKeepsExistingPrice(){
-        vendor.restock("Candy",5,20, "Its chocolate");
+        vendor.restock("Candy",5,20, "Its chocolate", "Sweets");
         assertTrue(vendor.hasItem("Candy"));
         assertEquals(1.25,vendor.getPrice("Candy"));
     }
 
     @Test
     void restockNewItemNegQuantity(){
-        vendor.restock("Mushroom",-5,2, "Its poison");
+        vendor.restock("Mushroom",-5,2, "Its poison", "Danger");
         assertFalse(vendor.hasItem("Mushroom"));
     }
 
@@ -277,7 +280,7 @@ public class VendorTest {
         assertFalse(vendor.hasItem("Gum"));
         assertEquals(0, vendor.getStock("Gum"));
 
-        vendor.restock("Gum", 10, 0.6, "Its pink");
+        vendor.restock("Gum", 10, 0.6, "Its pink", "Sweets");
         assertTrue(vendor.hasItem("Gum"));
         assertEquals(10, vendor.getStock("Gum"));
         assertEquals(0.6,  vendor.getPrice("Gum"));
@@ -343,9 +346,113 @@ public class VendorTest {
 
     @Test
     void restockSameItemDescription(){
-        vendor.restock("Gum", 10, 0.6, "Its pink");
+        vendor.restock("Gum", 10, 0.6, "Its pink", "Sweets");
         assertFalse(vendor.getItemDescription("Gum").contains("Its pink"));
     }
+
+    @Test
+    void restockSameCategory(){
+        vendor.restock("Gum", 10, 0.6, "Chewy", "Candy");
+        assertEquals("Sweets", vendor.getCategory("Gum"));
+    }
+
+    @Test
+    void getItemCategory(){
+        assertEquals("Sweets", vendor.getItemCategory("Gum"));
+    }
+
+    @Test
+    void getItemCategoryNull(){
+        assertNull(null, vendor.getItemCategory(null));
+    }
+
+    @Test
+    void getItemCategoryBlank(){
+        assertNull(null, vendor.getItemCategory(""));
+    }
+
+    @Test
+    void getItemCategoryInvalid(){
+        assertNull(null, vendor.getItemCategory("Gumball Machine"));
+    }
+
+    @Test
+    void getItemsInCategory(){
+        assertEquals(2, vendor.getItemsInCategory("Sweets").size());
+    }
+
+    @Test
+    void getItemsInCategoryNull(){
+        assertEquals(0, vendor.getItemsInCategory(null).size());
+    }
+
+    @Test
+    void getItemsInCategoryBlank(){
+        assertEquals(0, vendor.getItemsInCategory("").size());
+    }
+
+    @Test
+    void getItemsInCategoryInvalid(){
+        assertEquals(0, vendor.getItemsInCategory("Baking").size());
+    }
+
+    @Test
+    void setItemDiscount(){
+        assertTrue(vendor.setDiscountItem(0.8, "Candy"));
+        assertEquals(1.0, vendor.getPrice("Candy"));
+    }
+
+    @Test
+    void setItemDiscountNull(){
+        assertFalse(vendor.setDiscountItem(0.8, null));
+    }
+
+    @Test
+    void setItemDiscountBlank(){
+        assertFalse(vendor.setDiscountItem(0.8, ""));
+    }
+
+    @Test
+    void setItemDiscountInvalid(){
+        assertFalse(vendor.setDiscountItem(0.8, "Blanket"));
+        assertFalse(vendor.setDiscountItem(-0.8, "Candy"));
+        assertFalse(vendor.setDiscountItem(8, "Candy"));
+    }
+
+    @Test
+    void setCategoryDiscount(){
+        assertTrue(vendor.setDiscountCategory(0.8, "Sweets"));
+        assertEquals(1.0, vendor.getPrice("Candy"));
+        assertEquals(0.4, vendor.getPrice("Gum"));
+    }
+
+    @Test
+    void setCategoryDiscountNull(){
+        assertFalse(vendor.setDiscountCategory(0.8, null));
+        assertEquals(1.25, vendor.getPrice("Candy"));
+        assertEquals(0.5, vendor.getPrice("Gum"));
+    }
+
+    @Test
+    void setCategoryDiscountBlank(){
+        assertFalse(vendor.setDiscountCategory(0.8, ""));
+        assertEquals(1.25, vendor.getPrice("Candy"));
+        assertEquals(0.5, vendor.getPrice("Gum"));
+    }
+
+    @Test
+    void setCategoryDiscountInvalid(){
+        assertFalse(vendor.setDiscountCategory(0.8, "Tech"));
+        assertEquals(1.25, vendor.getPrice("Candy"));
+        assertEquals(0.5, vendor.getPrice("Gum"));
+        assertTrue(vendor.setDiscountCategory(-0.8, "Sweets"));
+        assertEquals(1.25, vendor.getPrice("Candy"));
+        assertEquals(0.5, vendor.getPrice("Gum"));
+        assertTrue(vendor.setDiscountCategory(8, "Sweets"));
+        assertEquals(1.25, vendor.getPrice("Candy"));
+        assertEquals(0.5, vendor.getPrice("Gum"));
+    }
+
 
 
 }

@@ -3,17 +3,19 @@ class Item {
     int stock;
     int purchaseCount;
     String description;
+    String category;
 
     /**
      * Class for an item, representing an item for a vendor
      * @param price The cost of the item.
      * @param numPieces The number of pieces/stock of the item
      */
-    Item(double price, int numPieces, String description) {
+    Item(double price, int numPieces, String description, String category) {
         this.price = price;
         this.stock = numPieces;
         this.purchaseCount = 0;
         this.description = description;
+        this.category = category;
     }
 
     /**
@@ -22,6 +24,24 @@ class Item {
      */
     String getDescription(){
         return description;
+    }
+
+    /**
+     * Sets discount the price of the item by the input amount
+     * @param percentageOff
+     */
+    void setDiscount(double percentageOff){
+        if(percentageOff > 0 && percentageOff < 1) {
+            this.price = this.price * percentageOff;
+        }
+    }
+
+    /**
+     * This retrieves the category of the item which may be one or a String with many categories
+     * @return String representing the category or categories of the item.
+     */
+    String getCategory(){
+        return category;
     }
 
     /**
