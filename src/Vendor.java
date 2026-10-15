@@ -6,7 +6,7 @@ import java.util.HashMap;
  * well as the current balance of money that has been deposited into the machine.
  */
 class Vendor {
-    private static HashMap<String, Item> Stock = new HashMap<String,Item>();
+    private HashMap<String, Item> Stock = new HashMap<String,Item>();
     private double balance;
 
     Vendor(int numCandy, int numGum) {
@@ -107,6 +107,20 @@ class Vendor {
             return Stock.get(item).getPrice();
         }else{
             return 0.0;
+        }
+    }
+
+    /**
+     * This will change the name of an existing item for the vendor
+     * @param oldName The existing old name of the item you want to rename
+     * @param newName The new name you want to rename it to.
+     */
+    void changeName(String oldName, String newName){
+        if(newName == null || !Stock.containsKey(oldName) || newName.strip().isEmpty()
+                || Stock.containsKey(newName)){
+            return;
+        }else{
+            Stock.put(newName, Stock.remove(oldName));
         }
     }
 }

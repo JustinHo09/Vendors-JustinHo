@@ -152,4 +152,79 @@ public class VendorTest {
         vendor.restock("Mushroom",-5,2);
         assertFalse(vendor.hasItem("Mushroom"));
     }
+
+    @Test
+    void changeName(){
+        assertTrue(vendor.hasItem("Gum"));
+        vendor.changeName("Gum", "Chewing Gum");
+        assertFalse(vendor.hasItem("Gum"));
+        assertTrue(vendor.hasItem("Chewing Gum"));
+        assertEquals(6, vendor.getStock("Chewing Gum"));
+        assertEquals(0.5,  vendor.getPrice("Chewing Gum"));
+    }
+
+    @Test
+    void changeNameNull(){
+        assertTrue(vendor.hasItem("Gum"));
+        vendor.changeName("Gum", null);
+        assertFalse(vendor.hasItem(null));
+        assertTrue(vendor.hasItem("Gum"));
+        assertEquals(6, vendor.getStock("Gum"));
+        assertEquals(0.5,  vendor.getPrice("Gum"));
+    }
+
+    @Test
+    void changeNameBlank(){
+        assertTrue(vendor.hasItem("Gum"));
+        vendor.changeName("Gum", "");
+        assertFalse(vendor.hasItem(""));
+        assertTrue(vendor.hasItem("Gum"));
+        assertEquals(6, vendor.getStock("Gum"));
+        assertEquals(0.5,  vendor.getPrice("Gum"));
+    }
+
+    @Test
+    void changeNameSpace() {
+        assertTrue(vendor.hasItem("Gum"));
+        vendor.changeName("Gum", " ");
+        assertFalse(vendor.hasItem(" "));
+        assertTrue(vendor.hasItem("Gum"));
+        assertEquals(6, vendor.getStock("Gum"));
+        assertEquals(0.5, vendor.getPrice("Gum"));
+    }
+
+    @Test
+    void buyChangedName(){
+        vendor.changeName("Gum", "Chewing Gum");
+        assertTrue(vendor.hasItem("Chewing Gum"));
+        assertEquals(6, vendor.getStock("Chewing Gum"));
+        vendor.addMoney(10.5);
+        vendor.select("Chewing Gum");
+        assertEquals(5,  vendor.getStock("Chewing Gum"));
+        assertEquals(10,  vendor.getBalance());
+    }
+
+    @Test
+    void renameExistingName(){
+        vendor.changeName("Gum", "Candy");
+        assertTrue(vendor.hasItem("Gum"));
+        assertEquals(6, vendor.getStock("Candy"));
+        assertEquals(1.25,  vendor.getPrice("Candy"));
+    }
+
+    @Test
+    void renameNonExistentName(){
+        vendor.changeName("Chewing Gum", "Hubba Bubba");
+        assertFalse(vendor.hasItem("Hubba Bubba"));
+    }
+
+    @Test
+    void renameSameName(){
+        vendor.changeName("Gum", "Gum");
+        assertTrue(vendor.hasItem("Gum"));
+        assertEquals(6, vendor.getStock("Gum"));
+        assertEquals(0.5,  vendor.getPrice("Gum"));
+    }
+
+
 }
