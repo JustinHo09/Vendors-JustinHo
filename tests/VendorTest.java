@@ -2,6 +2,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VendorTest {
 
@@ -51,4 +53,30 @@ public class VendorTest {
         vendor.select("Tesseract");
         assertEquals(10.5, vendor.getBalance());
     }
+
+    @Test
+    void emptyInventory(){
+        vendor.emptyVendor();
+        assertFalse(vendor.hasItem("Gum"));
+        assertFalse(vendor.hasItem("Candy"));
+        assertEquals(0, vendor.getStock("Gum"));
+        assertEquals(0,vendor.getStock("Candy"));
+    }
+
+    @Test
+    void buyAfterEmptyInventory(){
+        //First verify the inventory is empty before proceeding
+        vendor.emptyVendor();
+        assertFalse(vendor.hasItem("Gum"));
+        assertFalse(vendor.hasItem("Candy"));
+
+        //Now attempt the purchase
+        vendor.addMoney(10.5);
+        assertEquals(0, vendor.getStock("Gum"));
+        assertEquals(0,vendor.getStock("Candy"));
+        vendor.select("Gum");
+        vendor.select("Candy");
+        assertEquals(10.5, vendor.getBalance());
+    }
+
 }

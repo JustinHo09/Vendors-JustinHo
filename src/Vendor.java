@@ -52,8 +52,33 @@ class Vendor {
         else System.out.println("Sorry, don't know that item");
     }
 
+    /**
+     * Retrieves the stock of the input item.
+     * @param item The name of the item to check the stock for.
+     * @return 0 the number of that item in stock, 0 if out of stock, and
+     * if item is not found/carried by the vendor.
+     */
     int getStock (String item){
-        return Stock.get(item).getStock();
+        if(Stock.containsKey(item)) {
+            return Stock.get(item).getStock();
+        }
+        return 0;
+    }
+
+    /**
+     * Clears the stock leaving it empty.
+     */
+    void emptyVendor(){
+        Stock.clear();
+    }
+
+    /**
+     * This will check to see if the item is even carried by the vendor.
+     * @param item The name of the item to check if carried.
+     * @return True if the item is carried by the vendor False if not.
+     */
+    boolean hasItem(String item){
+        return Stock.containsKey(item);
     }
 
 }
