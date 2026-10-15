@@ -226,5 +226,50 @@ public class VendorTest {
         assertEquals(0.5,  vendor.getPrice("Gum"));
     }
 
+    @Test
+    void removeItem(){
+        vendor.removeItem("Gum");
+        assertFalse(vendor.hasItem("Gum"));
+        assertEquals(0, vendor.getStock("Gum"));
+        assertTrue(vendor.hasItem("Candy"));
+    }
 
+    @Test
+    void buyRemovedItem(){
+        vendor.removeItem("Gum");
+        assertFalse(vendor.hasItem("Gum"));
+        vendor.addMoney(10.5);
+        vendor.select("Gum");
+        assertEquals(10.5,  vendor.getBalance());
+    }
+
+    @Test
+    void removeNonExistItem(){
+        vendor.removeItem("Pockey");
+        assertFalse(vendor.hasItem("Pockey"));
+        assertEquals(0, vendor.getStock("Pockey"));
+        assertTrue(vendor.hasItem("Gum"));
+        assertTrue(vendor.hasItem("Candy"));
+    }
+
+    @Test
+    void removeItemNull(){
+        vendor.removeItem(null);
+        assertFalse(vendor.hasItem(null));
+        assertEquals(0, vendor.getStock(null));
+        assertTrue(vendor.hasItem("Gum"));
+        assertTrue(vendor.hasItem("Candy"));
+    }
+
+    @Test
+    void removeAndAddItem(){
+        vendor.removeItem("Gum");
+        assertFalse(vendor.hasItem("Gum"));
+        assertEquals(0, vendor.getStock("Gum"));
+
+        vendor.restock("Gum", 10, 0.6);
+        assertTrue(vendor.hasItem("Gum"));
+        assertEquals(10, vendor.getStock("Gum"));
+        assertEquals(0.6,  vendor.getPrice("Gum"));
+    }
 }

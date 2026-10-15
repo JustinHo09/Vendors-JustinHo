@@ -123,6 +123,15 @@ class Vendor {
             Stock.put(newName, Stock.remove(oldName));
         }
     }
+
+    /**
+     * This removes the item from the inventory.
+     * @param item The name of the item to remove from the inventory.
+     *
+     */
+    void removeItem(String item){
+        Stock.remove(item);
+    }
 }
 
 class Examples {
