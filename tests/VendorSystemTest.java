@@ -11,16 +11,16 @@ class VendorSystemTest {
     @BeforeEach
     void setUp(){
         vs = new VendorSystem();
-        Vendor v = new Vendor(5,5);
+        Vendor v = new Vendor(5,5, "Its chewy", "Its sweet");
         v.addMoney(20);
         vs.addVendor(v);
-        vs.addVendor(new Vendor(5,5));
-        vs.addVendor(new Vendor(5,5));
-        vs.addVendor(new Vendor(5,5));
-        Vendor v2 = new Vendor(5,5);
+        vs.addVendor(new Vendor(5,5, "Its chewy", "Its sweet"));
+        vs.addVendor(new Vendor(5,5, "Its chewy", "Its sweet"));
+        vs.addVendor(new Vendor(5,5, "Its chewy", "Its sweet"));
+        Vendor v2 = new Vendor(5,5, "Its chewy", "Its sweet");
         v2.addMoney(20);
-        v2.restock("Coke", 10, 3);
-        v2.restock("Gummy", 5, 0.5);
+        v2.restock("Coke", 10, 3, "Its fizzy");
+        v2.restock("Gummy", 5, 0.5, "Its sweet and chewy");
         v2.addMoney(20);
         vs.addVendor(v2);
     }
@@ -90,7 +90,7 @@ class VendorSystemTest {
     @Test
     void addOverCap(){
         assertEquals(5, vs.numberOfVendors());
-        assertFalse(vs.addVendor(new Vendor(1,1)));
+        assertFalse(vs.addVendor(new Vendor(1,1, "Its chewy", "Its sweet")));
         assertEquals(5, vs.numberOfVendors());
     }
 
@@ -106,39 +106,46 @@ class VendorSystemTest {
 
     @Test
     void restockItemToVendorInSystem(){
-        assertTrue(vs.restockItemFromVendor(4,"Gum", 10, 3));
+        assertTrue(vs.restockItemFromVendor(4,"Gum", 10, 3, "Its pink"));
         assertEquals(15, vs.getVendorStock(4,"Gum"));
+        assertEquals("Its chewy", vs.getItemDescription(4, "Gum"));
+
     }
 
     @Test
     void restockItemToVendorInSystemOverlap(){
-        assertTrue(vs.restockItemFromVendor(4,"Gum", 10, 3));
+        assertTrue(vs.restockItemFromVendor(4,"Gum", 10, 3, "Its mint"));
         assertEquals(15, vs.getVendorStock(4,"Gum"));
+        assertEquals("Its chewy", vs.getItemDescription(4, "Gum"));
         assertEquals(5, vs.getVendorStock(0,"Gum"));
+        assertEquals("Its chewy", vs.getItemDescription(0, "Gum"));
     }
 
     @Test
     void restockNewItemToVendorInSystem(){
-        assertTrue(vs.restockItemFromVendor(1,"Pepsi", 10, 3));
+        assertTrue(vs.restockItemFromVendor(1,"Pepsi", 10, 3, "Its cola"));
         assertEquals(10, vs.getVendorStock(1,"Pepsi"));
+        assertEquals("Its cola", vs.getItemDescription(1, "Pepsi"));
         assertTrue(vs.vendorHasItem(1,"Pepsi"));
     }
 
     @Test
     void restockNewItemToVendorInSystemOverlap(){
-        assertTrue(vs.restockItemFromVendor(1,"Pepsi", 10, 3));
+        assertTrue(vs.restockItemFromVendor(1,"Pepsi", 10, 3, "Its cola"));
         assertEquals(10, vs.getVendorStock(1,"Pepsi"));
         assertTrue(vs.vendorHasItem(1,"Pepsi"));
+        assertEquals("Its cola", vs.getItemDescription(1, "Pepsi"));
         assertFalse(vs.vendorHasItem(0,"Pepsi"));
+        assertNull(vs.getItemDescription(0, "Pepsi"));
     }
 
 
     @Test
     void restockInvalidVendorInSystem(){
-        assertFalse(vs.restockItemFromVendor(100,"Gummy", 10, 3));
+        assertFalse(vs.restockItemFromVendor(100,"Gummy", 10, 3, "Its a bear"));
         assertFalse(vs.vendorExists(100));
 
-        assertFalse(vs.restockItemFromVendor(-100,"Gummy", 10, 3));
+        assertFalse(vs.restockItemFromVendor(-100,"Gummy", 10, 3, "Its a bear"));
         assertFalse(vs.vendorExists(-100));
     }
 
@@ -147,7 +154,7 @@ class VendorSystemTest {
     void addVendor(){
         vs.removeVendor(0);
         vs.removeVendor(0);
-        assertTrue(vs.addVendor(new Vendor(5,5)));
+        assertTrue(vs.addVendor(new Vendor(5,5, "Its chewy", "Its sweet")));
         assertEquals(4, vs.numberOfVendors());
         assertTrue(vs.vendorExists(3));
     }
@@ -218,6 +225,7 @@ class VendorSystemTest {
         assertTrue(vs.vendorHasItem(1,"Gumball"));
         assertEquals(5, vs.getVendorStock(1,"Gumball"));
     }
+
 
     @Test
     void vendorSystemItemNameChangeOverlap(){
@@ -375,5 +383,20 @@ class VendorSystemTest {
         }
         assertNull(vs.getPurchaseInsights());
     }
+
+    @Test
+    void getItemDescription(){
+        assertNotNull(vs.getItemDescription(0, "Gum"));
+        assertEquals("Its chewy", vs.getItemDescription(0, "Gum"));
+    }
+
+    @Test
+    void getItemDescriptionVendorNotExist(){
+        assertNull(vs.getItemDescription(100, "Gum"));
+        assertNull(vs.getItemDescription(-100, "Gum"));
+    }
+
+
+
 
 }

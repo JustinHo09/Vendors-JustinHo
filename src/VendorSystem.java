@@ -68,9 +68,9 @@ public class VendorSystem {
         return false;
     }
 
-    public boolean restockItemFromVendor(int index, String itemName, int quantity, double price){
+    public boolean restockItemFromVendor(int index, String itemName, int quantity, double price, String description){
         if(index >= 0 && index < vendors.size()) {
-            vendors.get(index).restock(itemName, quantity, price);
+            vendors.get(index).restock(itemName, quantity, price, description);
             return true;
         }
         return false;
@@ -127,6 +127,13 @@ public class VendorSystem {
             return vendors.get(index).getBalance();
         }
         return 0;
+    }
+
+    public String getItemDescription(int vendorIndex, String itemName){
+        if(vendorIndex >= 0 && vendorIndex < vendors.size()) {
+            return vendors.get(vendorIndex).getItemDescription(itemName);
+        }
+        return null;
     }
 
     public int getItemPurchaseCount(String itemName){

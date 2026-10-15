@@ -2,16 +2,26 @@ class Item {
     double price;
     int stock;
     int purchaseCount;
+    String description;
 
     /**
      * Class for an item, representing an item for a vendor
      * @param price The cost of the item.
      * @param numPieces The number of pieces/stock of the item
      */
-    Item(double price, int numPieces) {
+    Item(double price, int numPieces, String description) {
         this.price = price;
         this.stock = numPieces;
         this.purchaseCount = 0;
+        this.description = description;
+    }
+
+    /**
+     * Retrieves an item's description.
+     * @return String which is the item's description
+     */
+    String getDescription(){
+        return description;
     }
 
     /**

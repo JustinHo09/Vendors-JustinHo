@@ -10,9 +10,9 @@ class Vendor {
     private HashMap<String, Item> Stock = new HashMap<String,Item>();
     private double balance;
 
-    Vendor(int numCandy, int numGum) {
-        Stock.put("Candy", new Item(1.25, numCandy));
-        Stock.put("Gum", new Item(.5, numGum));
+    Vendor(int numCandy, int numGum, String gumDescription, String candyDescription) {
+        Stock.put("Candy", new Item(1.25, numCandy, candyDescription));
+        Stock.put("Gum", new Item(.5, numGum, gumDescription));
         this.balance = 0;
     }
 
@@ -90,11 +90,11 @@ class Vendor {
      * @param item The item to restock.
      * @param quantity The amount to restock the item by.
      */
-    void restock(String item, int quantity, double price){
+    void restock(String item, int quantity, double price, String description){
         if(Stock.containsKey(item) && quantity > 0 && price >= 0) {
             Stock.get(item).restock(quantity);
         } else if( !Stock.containsKey(item) && quantity > 0 && price > 0) {
-            Stock.put(item, new Item(price, quantity));
+            Stock.put(item, new Item(price, quantity, description));
         }
     }
 
@@ -167,6 +167,18 @@ class Vendor {
      */
     ArrayList<String> getItems(){
         return new ArrayList<>(Stock.keySet());
+    }
+
+    /**
+     * Retrieves an item's description if it exists.
+     * @param item The item to get the description for.
+     * @return String which is the item's description.
+     */
+    String getItemDescription(String item){
+        if(item != null && !item.isBlank() && Stock.containsKey(item)) {
+            return Stock.get(item).getDescription();
+        }
+        return null;
     }
 }
 

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class VendorTest {
 
@@ -11,7 +13,8 @@ public class VendorTest {
 
     @BeforeEach
     public void setup() {
-        vendor = new Vendor(6,6);
+        vendor = new Vendor(6,6, "Its oh so chewy and pink!"
+                , "This is super sweet and round!");
     }
 
     @Test
@@ -81,7 +84,7 @@ public class VendorTest {
 
     @Test
     void restock(){
-        vendor.restock("Gum",10,0);
+        vendor.restock("Gum",10,0, "Its pink");
         assertEquals(16, vendor.getStock("Gum"));
     }
 
@@ -93,32 +96,33 @@ public class VendorTest {
             vendor.select("Gum");
         }
         assertEquals(0,vendor.getStock("Gum"));
-        vendor.restock("Gum",10,1);
+        vendor.restock("Gum",10,1, "Its pink");
         assertEquals(10,vendor.getStock("Gum"));
     }
 
     @Test
     void restockIndependent(){
-        vendor.restock("Gum",10,1);
+        vendor.restock("Gum",10,1, "Its pink");
         assertEquals(6, vendor.getStock("Candy"));
     }
 
     @Test
     void restockNeg(){
-        vendor.restock("Gum",-10,1);
+        vendor.restock("Gum",-10,1, "Its pink");
         assertEquals(6, vendor.getStock("Gum"));
     }
 
     @Test
     void restockNewItem(){
-        vendor.restock("Oats",10,1);
+        vendor.restock("Oats",10,1, "It has Washington's Face");
         assertTrue(vendor.hasItem("Oats"));
         assertEquals(10, vendor.getStock("Oats"));
+        assertEquals("It has Washington's Face", vendor.getItemDescription("Oats"));
     }
 
     @Test
     void buyNewRestocked(){
-        vendor.restock("Gummy", 10,1);
+        vendor.restock("Gummy", 10,1, "Its pink");
         assertTrue(vendor.hasItem("Gummy"));
         vendor.addMoney(10.5);
         assertEquals(10, vendor.getStock("Gummy"));
@@ -129,27 +133,27 @@ public class VendorTest {
 
     @Test
     void restockNewItemNegPrice(){
-        vendor.restock("Gummy",10,-1);
+        vendor.restock("Gummy",10,-1, "Its sour");
         assertFalse(vendor.hasItem("Gummy"));
     }
 
     @Test
     void restockNegPrice(){
-        vendor.restock("Gum",10,-1);
+        vendor.restock("Gum",10,-1, "Its pink");
         assertTrue(vendor.hasItem("Gum"));
         assertEquals(6,vendor.getStock("Gum"));
     }
 
     @Test
     void restockKeepsExistingPrice(){
-        vendor.restock("Candy",5,20);
+        vendor.restock("Candy",5,20, "Its chocolate");
         assertTrue(vendor.hasItem("Candy"));
         assertEquals(1.25,vendor.getPrice("Candy"));
     }
 
     @Test
     void restockNewItemNegQuantity(){
-        vendor.restock("Mushroom",-5,2);
+        vendor.restock("Mushroom",-5,2, "Its poison");
         assertFalse(vendor.hasItem("Mushroom"));
     }
 
@@ -213,6 +217,12 @@ public class VendorTest {
     }
 
     @Test
+    void renameSameDescription(){
+        vendor.changeName("Gum", "Chewing Gum");
+        assertEquals("Its oh so chewy and pink!", vendor.getItemDescription("Chewing Gum"));
+    }
+
+    @Test
     void renameNonExistentName(){
         vendor.changeName("Chewing Gum", "Hubba Bubba");
         assertFalse(vendor.hasItem("Hubba Bubba"));
@@ -267,7 +277,7 @@ public class VendorTest {
         assertFalse(vendor.hasItem("Gum"));
         assertEquals(0, vendor.getStock("Gum"));
 
-        vendor.restock("Gum", 10, 0.6);
+        vendor.restock("Gum", 10, 0.6, "Its pink");
         assertTrue(vendor.hasItem("Gum"));
         assertEquals(10, vendor.getStock("Gum"));
         assertEquals(0.6,  vendor.getPrice("Gum"));
@@ -309,5 +319,33 @@ public class VendorTest {
     void getPurchaseCountEmpty(){
         assertEquals(0, vendor.getItemPurchaseCount(""));
     }
+
+    @Test
+    void getItemsDescription(){
+        assertTrue(vendor.getItemDescription("Gum").contains("Its oh so chewy"));
+        assertNotNull(vendor.getItemDescription("Gum"));
+    }
+
+    @Test
+    void getItemsDescriptionNull(){
+        assertNull(vendor.getItemDescription(null));
+    }
+
+    @Test
+    void getItemsDescriptionNotValid(){
+        assertNull(vendor.getItemDescription("Gumball Machine"));
+    }
+
+    @Test
+    void getItemsDescriptionBlank(){
+        assertNull(vendor.getItemDescription(""));
+    }
+
+    @Test
+    void restockSameItemDescription(){
+        vendor.restock("Gum", 10, 0.6, "Its pink");
+        assertFalse(vendor.getItemDescription("Gum").contains("Its pink"));
+    }
+
 
 }
