@@ -4,6 +4,7 @@ class Item {
     int purchaseCount;
     String description;
     String category;
+    boolean bestseller;
 
     /**
      * Class for an item, representing an item for a vendor
@@ -16,6 +17,7 @@ class Item {
         this.purchaseCount = 0;
         this.description = description;
         this.category = category;
+        this.bestseller = false;
     }
 
     /**
@@ -34,6 +36,22 @@ class Item {
         if(percentageOff > 0 && percentageOff < 1) {
             this.price = this.price * percentageOff;
         }
+    }
+
+    /**
+     * This method sets a item as a bestseller or not
+     * @param bestseller Status of it being a bell seller or not.
+     */
+    void setBestseller(boolean bestseller){
+        this.bestseller = bestseller;
+    }
+
+    /**
+     * Retrieves the bestseller status of the iem
+     * @return True if it is a bestseller False if not
+     */
+    boolean  getBestseller(){
+        return this.bestseller;
     }
 
     /**

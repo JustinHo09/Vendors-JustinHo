@@ -453,6 +453,64 @@ public class VendorTest {
         assertEquals(0.5, vendor.getPrice("Gum"));
     }
 
+    @Test
+    void setBestSeller(){
+        assertFalse(vendor.bestSellerStatus("Gum"));
+        assertTrue(vendor.setBestSeller(true, "Gum"));
+        assertTrue(vendor.bestSellerStatus("Gum"));
+        assertFalse(vendor.bestSellerStatus("Candy"));
+    }
+
+    @Test
+    void setBestSellerNull(){
+        assertFalse(vendor.setBestSeller(true,null));
+    }
+
+    @Test
+    void setBestSellerBlank(){
+        assertFalse(vendor.setBestSeller(true,""));
+    }
+
+    @Test
+    void setBestSellerInvalid(){
+        assertFalse(vendor.setBestSeller(true, "Gumball"));
+    }
 
 
+    @Test
+    void getBestSellerStatus(){
+        assertFalse(vendor.bestSellerStatus("Gum"));
+        vendor.setBestSeller(true, "Gum");
+        assertTrue(vendor.bestSellerStatus("Gum"));
+        assertFalse(vendor.bestSellerStatus("Candy"));
+    }
+
+    @Test
+    void getBestSellerStatusNull(){
+        assertFalse(vendor.bestSellerStatus(null));
+    }
+
+    @Test
+    void getBestSellerStatusBlank(){
+        assertFalse(vendor.bestSellerStatus(""));
+    }
+
+    @Test
+    void getBestSellerStatusInvalid(){
+        assertFalse(vendor.bestSellerStatus("Gumball"));
+    }
+
+    @Test
+    void getBestSellersNone(){
+        assertEquals(0, vendor.getBestSellers().size());
+    }
+
+    @Test
+    void getBestSellers(){
+        vendor.setBestSeller(true, "Gum");
+        vendor.setBestSeller(true, "Candy");
+        assertEquals(2, vendor.getBestSellers().size());
+        assertTrue(vendor.getBestSellers().contains("Gum"));
+        assertTrue(vendor.getBestSellers().contains("Candy"));
+    }
 }

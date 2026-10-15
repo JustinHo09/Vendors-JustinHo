@@ -258,6 +258,52 @@ class Vendor {
         }
         return null;
     }
+
+    /**
+     * Sets the best
+     * @param bestseller The status of if bestseller or not.
+     * @param itemName The name of the item to set bestselling status
+     * @return True if the status was set to the parameter false if not.
+     */
+    public boolean setBestSeller(boolean bestseller, String itemName){
+        if(itemName != null && !itemName.isBlank() && Stock.containsKey(itemName)){
+            Stock.get(itemName).setBestseller(bestseller);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Retreives the bestselling status of an item
+     * @param itemName The item to get the bestselling status for
+     * @return True or False if it is a bestseller or not, but also False if its not a valid item
+     */
+    public boolean bestSellerStatus(String itemName){
+        if(itemName != null && !itemName.isBlank() && Stock.containsKey(itemName)){
+            return Stock.get(itemName).getBestseller();
+        }
+        return false;
+    }
+
+    /**
+     * Returns all the names of items that are bestsellers
+     * @return ArrayList of items that are bestsellers
+     */
+    public ArrayList<String> getBestSellers(){
+        ArrayList<String> bestSellers = new ArrayList<>();
+        ArrayList<Item> items = new ArrayList<Item>();
+        ArrayList<String> itemNames = new ArrayList<>(Stock.keySet());
+        for(String item : Stock.keySet()){
+            items.add(Stock.get(item));
+        }
+        for(int i=0; i<items.size(); i++){
+            if(items.get(i).getBestseller()){
+                bestSellers.add(itemNames.get(i));
+            }
+        }
+        System.out.println(bestSellers);
+        return bestSellers;
+    }
 }
 
 class Examples {

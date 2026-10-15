@@ -204,5 +204,25 @@ public class VendorSystem {
         return null;
     }
 
+    public boolean setBestSelling(int  vendorIndex, boolean status, String itemName){
+        if(vendorIndex >= 0 && vendorIndex < vendors.size()) {
+            return vendors.get(vendorIndex).setBestSeller(status, itemName);
+        }
+        return false;
+    }
+
+    public boolean getBestSelling(int vendorIndex, String itemName){
+        if(vendorIndex >= 0 && vendorIndex < vendors.size()) {
+            return vendors.get(vendorIndex).bestSellerStatus(itemName);
+        }
+        return false;
+    }
+
+    public ArrayList<String> getBestSellers(int vendorIndex){
+        if(vendorIndex >= 0 && vendorIndex < vendors.size()) {
+            return vendors.get(vendorIndex).getBestSellers();
+        }
+        return null;
+    }
 
 }

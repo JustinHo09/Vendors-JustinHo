@@ -476,4 +476,46 @@ class VendorSystemTest {
         assertNull(vs.getItemCategory(-10, "Gum"));
         assertNull(vs.getItemCategory(10, "Gum"));
     }
+
+    @Test
+    void setBestSeller(){
+        assertTrue(vs.setBestSelling(0,true, "Candy"));
+        assertTrue(vs.getBestSelling(0, "Candy"));
+    }
+
+    @Test
+    void setBestSellerOverlap(){
+        assertTrue(vs.setBestSelling(0,true, "Candy"));
+        assertTrue(vs.getBestSelling(0, "Candy"));
+        assertFalse(vs.getBestSelling(1, "Candy"));
+    }
+
+    @Test
+    void setBestSellerInvalid(){
+        assertFalse(vs.setBestSelling(10,true, "Candy"));
+        assertFalse(vs.setBestSelling(-10,true, "Candy"));
+    }
+
+    @Test
+    void getBestSeller(){
+        assertFalse(vs.getBestSelling(0, "Candy"));
+        assertTrue(vs.setBestSelling(0,true, "Candy"));
+        assertTrue(vs.getBestSelling(0, "Candy"));
+    }
+
+    @Test
+    void getBestSellerInvalid(){
+        assertFalse(vs.getBestSelling(10, "Candy"));
+        assertFalse(vs.getBestSelling(-10, "Candy"));
+    }
+
+    @Test
+    void getBestSellers(){
+        assertEquals(0, vs.getBestSellers(0).size());
+        vs.setBestSelling(0,true, "Candy");
+        vs.setBestSelling(0,true, "Gum");
+        assertEquals(2, vs.getBestSellers(0).size());
+        assertTrue(vs.getBestSellers(0).contains("Gum"));
+        assertTrue(vs.getBestSellers(0).contains("Candy"));
+    }
 }
