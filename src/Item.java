@@ -29,8 +29,9 @@ class Item {
     }
 
     /**
-     * Sets discount the price of the item by the input amount
-     * @param percentageOff
+     * Sets percentage of the original price you want the item to cost, so
+     * 10 with a 0.8 discount is 8 cost.
+     * @param percentageOff The percent of the original cost you want it to be.
      */
     void setDiscount(double percentageOff){
         if(percentageOff > 0 && percentageOff < 1) {

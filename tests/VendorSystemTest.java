@@ -51,6 +51,12 @@ class VendorSystemTest {
         assertFalse(vs.removeItemFromVendor(-110, "Gum"));
     }
 
+    @Test
+    void addNullVendor(){
+        vs.removeVendor(0);
+        assertFalse(vs.addVendor(null));
+        assertEquals(4,vs.numberOfVendors());
+    }
 
     @Test
     void buyItemToVendorInSystem(){

@@ -86,7 +86,7 @@ public class VendorTest {
     void restock(){
         vendor.restock("Gum",10,0, "Its pink", "Sweets");
         assertEquals(16, vendor.getStock("Gum"));
-        assertEquals("Sweets", vendor.getCategory("Gum"));
+        assertEquals("Sweets", vendor.getItemCategory("Gum"));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class VendorTest {
         assertEquals(0,vendor.getStock("Gum"));
         vendor.restock("Gum",10,1, "Its pink", "Sweets");
         assertEquals(10,vendor.getStock("Gum"));
-        assertEquals("Sweets", vendor.getCategory("Gum"));
+        assertEquals("Sweets", vendor.getItemCategory("Gum"));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class VendorTest {
         assertTrue(vendor.hasItem("Oats"));
         assertEquals(10, vendor.getStock("Oats"));
         assertEquals("It has Washington's Face", vendor.getItemDescription("Oats"));
-        assertEquals("Healthy", vendor.getCategory("Oats"));
+        assertEquals("Healthy", vendor.getItemCategory("Oats"));
     }
 
     @Test
@@ -353,7 +353,7 @@ public class VendorTest {
     @Test
     void restockSameCategory(){
         vendor.restock("Gum", 10, 0.6, "Chewy", "Candy");
-        assertEquals("Sweets", vendor.getCategory("Gum"));
+        assertEquals("Sweets", vendor.getItemCategory("Gum"));
     }
 
     @Test
@@ -363,17 +363,17 @@ public class VendorTest {
 
     @Test
     void getItemCategoryNull(){
-        assertNull(null, vendor.getItemCategory(null));
+        assertNull(vendor.getItemCategory(null));
     }
 
     @Test
     void getItemCategoryBlank(){
-        assertNull(null, vendor.getItemCategory(""));
+        assertNull(vendor.getItemCategory(""));
     }
 
     @Test
     void getItemCategoryInvalid(){
-        assertNull(null, vendor.getItemCategory("Gumball Machine"));
+        assertNull(vendor.getItemCategory("Gumball Machine"));
     }
 
     @Test
@@ -445,10 +445,10 @@ public class VendorTest {
         assertFalse(vendor.setDiscountCategory(0.8, "Tech"));
         assertEquals(1.25, vendor.getPrice("Candy"));
         assertEquals(0.5, vendor.getPrice("Gum"));
-        assertTrue(vendor.setDiscountCategory(-0.8, "Sweets"));
+        assertFalse(vendor.setDiscountCategory(-0.8, "Sweets"));
         assertEquals(1.25, vendor.getPrice("Candy"));
         assertEquals(0.5, vendor.getPrice("Gum"));
-        assertTrue(vendor.setDiscountCategory(8, "Sweets"));
+        assertFalse(vendor.setDiscountCategory(8, "Sweets"));
         assertEquals(1.25, vendor.getPrice("Candy"));
         assertEquals(0.5, vendor.getPrice("Gum"));
     }
@@ -474,6 +474,14 @@ public class VendorTest {
     @Test
     void setBestSellerInvalid(){
         assertFalse(vendor.setBestSeller(true, "Gumball"));
+    }
+
+    @Test
+    void buyDiscountedItem(){
+        vendor.setDiscountCategory(0.8, "Sweets");
+        vendor.addMoney(20.0);
+        vendor.select("Candy");
+        assertEquals(19.0, vendor.getBalance());
     }
 
 

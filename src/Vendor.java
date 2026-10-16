@@ -12,8 +12,8 @@ class Vendor {
 
     Vendor(int numCandy, int numGum, String gumDescription, String candyDescription,
            String gumCategory, String candyCategory) {
-        Stock.put("Candy", new Item(1.25, numCandy, candyDescription, "Sweets"));
-        Stock.put("Gum", new Item(.5, numGum, gumDescription, "Sweets"));
+        Stock.put("Candy", new Item(1.25, numCandy, candyDescription, candyCategory));
+        Stock.put("Gum", new Item(.5, numGum, gumDescription, gumCategory));
         this.balance = 0;
     }
 
@@ -57,7 +57,7 @@ class Vendor {
     /**
      * Retrieves the stock of the input item.
      * @param item The name of the item to check the stock for.
-     * @return 0 the number of that item in stock, 0 if out of stock, and
+     * @return The number of that item in stock, 0 if out of stock, and
      * if item is not found/carried by the vendor.
      */
     int getStock (String item){
@@ -90,6 +90,9 @@ class Vendor {
      * price is less than 0.
      * @param item The item to restock.
      * @param quantity The amount to restock the item by.
+     * @param category The category of the item to restock.
+     * @param description The description of the item to restock.
+     * @param price The price of the item to restock.
      */
     void restock(String item, int quantity, double price, String description, String category){
         if(Stock.containsKey(item) && quantity > 0 && price >= 0) {
@@ -102,7 +105,7 @@ class Vendor {
     /**
      * Returns the price of the inputted item, if it exists.
      * @param item The item to get the price for.
-     * @return double indicating the price of the item, 0.0 if the item does not exist.
+     * @return double indicating the price of the item, 0.0 if the item does not exist or price is 0.0.
      */
     double getPrice(String item){
         if(Stock.containsKey(item)) {
@@ -129,7 +132,6 @@ class Vendor {
     /**
      * This removes the item from the inventory.
      * @param item The name of the item to remove from the inventory.
-     *
      */
     void removeItem(String item){
         Stock.remove(item);
@@ -137,8 +139,7 @@ class Vendor {
 
     /**
      * Gets each item in the vendor's inventory and make it into a String detailing its name and stock.
-     * @return ArrayList of Strings with each index housing a String with an item name and stock
-     * from the vendor's inventory
+     * @return Strings with an item name and stock from the vendor's inventory
      */
     String getInventory(){
         ArrayList<String> inventory = new ArrayList<>(Stock.keySet());
@@ -153,7 +154,8 @@ class Vendor {
     /**
      * Retrieves the amount of times a certain item as been bought.
      * @param item The name of the item to check.
-     * @return int showing how many times the item has been purchased.
+     * @return int showing how many times the item has been purchased, 0 if not a valid item or
+     * bought 0 times.
      */
     int getItemPurchaseCount(String item){
         if(item != null && !item.isBlank() && Stock.containsKey(item)) {
@@ -173,7 +175,7 @@ class Vendor {
     /**
      * Retrieves an item's description if it exists.
      * @param item The item to get the description for.
-     * @return String which is the item's description.
+     * @return String which is the item's description, null if not a valid item.
      */
     String getItemDescription(String item){
         if(item != null && !item.isBlank() && Stock.containsKey(item)) {
@@ -219,6 +221,7 @@ class Vendor {
      * This discount's a specific item a vendor has
      * @param discount The discount amount to apply.
      * @param itemName The item to apply the discount too.
+     * @return True if the item discount was successful, False if not
      */
     boolean setDiscountItem(double discount, String itemName){
         if(itemName != null && !itemName.isBlank() && Stock.containsKey(itemName)
@@ -233,9 +236,12 @@ class Vendor {
      * This applies a discount across an entire category
      * @param discount The discount amount to apply.
      * @param category The category to apply it to.
+     * @return True if the method was successful so if there was a discount to that category
+     * even if there is nothing for that category, False the discount or category is invalid not
+     * non-existent.
      */
     boolean setDiscountCategory(double discount, String category){
-        if(category != null && !category.isBlank()){
+        if(category != null && !category.isBlank() && discount > 0 && discount < 1){
             int size = getItemsInCategory(category).size();
             if(size > 0) {
                 for(int i=0; i<size; i++) {
@@ -245,18 +251,6 @@ class Vendor {
             }
         }
         return false;
-    }
-
-    /**
-     * Returns the category of the inputted item
-     * @param item The item to get the category of
-     * @return The category of the item
-     */
-    String getCategory(String item){
-        if(item != null && !item.isBlank() && Stock.containsKey(item)){
-            return Stock.get(item).getCategory();
-        }
-        return null;
     }
 
     /**
@@ -274,7 +268,7 @@ class Vendor {
     }
 
     /**
-     * Retreives the bestselling status of an item
+     * Retrieves the bestselling status of an item
      * @param itemName The item to get the bestselling status for
      * @return True or False if it is a bestseller or not, but also False if its not a valid item
      */
